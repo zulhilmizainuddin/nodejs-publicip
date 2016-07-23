@@ -1,6 +1,6 @@
 {
   "name": "nodejs-publicip",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Query IPv4 and IPv6 public IP address from OpenDNS",
   "main": "index.js",
   "scripts": {
