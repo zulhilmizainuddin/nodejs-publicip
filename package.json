@@ -17,6 +17,10 @@
   ],
   "author": "Zulhilmi Mohamed Zainuddin",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zulhilmizainuddin/nodejs-publicip.git"
+  },
   "dependencies": {
     "dns-socket": "^1.4.1"
   }
