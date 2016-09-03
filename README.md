@@ -9,7 +9,7 @@ Event emitter for querying your IPv4 and IPv6 public IP address from OpenDNS
 
 ```javascript
 // query public IPv4 and IPv6 address
-getPublicIPAddress()
+queryPublicIPAddress()
 ```
 
 ## Usage Example
