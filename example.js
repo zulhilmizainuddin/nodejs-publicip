@@ -9,4 +9,4 @@ publicIp
         console.log(`ipv6 address: ${ip.v6}`);
     });
 
-publicIp.queryPublicIPAddress();
+publicIp.queryPublicIPAddresses();

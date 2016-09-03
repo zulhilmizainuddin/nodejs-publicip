@@ -28,14 +28,39 @@ class PublicIp extends events.EventEmitter {
         };
     }
 
-    queryPublicIPAddress() {
-        async.parallel([
-            () => this.queryIPAddress('ipv4'),
-            () => this.queryIPAddress('ipv6')
-        ]);
+    queryPublicIPv4Address() {
+        this.queryIPAddress('ipv4', (ip) => {
+            this.emit('ip', ip);
+        });
     }
 
-    queryIPAddress(version) {
+    queryPublicIPv6Address() {
+        this.queryIPAddress('ipv6', (ip) => {
+            this.emit('ip', ip);
+        });
+    }
+
+    queryPublicIPAddresses() {
+        async.parallel({
+           ipv4: (callback) => {
+               this.queryIPAddress('ipv4', (ip) => {
+                   callback(null, ip);
+               });
+           },
+            ipv6: (callback) => {
+                this.queryIPAddress('ipv6', (ip) => {
+                    callback(null, ip);
+                });
+            }
+        }, (err, results) => {
+            this.emit('ip', {
+                v4: results.ipv4,
+                v6: results.ipv6
+            });
+        });
+    }
+
+    queryIPAddress(version, callback) {
         const data = this.type[version];
         const socket = dns({
             socket: dgram.createSocket(version === 'ipv4' ? 'udp4' : 'udp6'),
@@ -55,18 +80,7 @@ class PublicIp extends events.EventEmitter {
                 ip = res.answers[0] && res.answers[0].data;
             }
 
-            if (version === 'ipv4') {
-                this.ipv4 = ip ? ip : null;
-            } else {
-                this.ipv6 = ip ? ip : null;
-            }
-
-            if (this.ipv4 !== undefined && this.ipv6 !== undefined) {
-                this.emit('ip', {
-                    v4: this.ipv4,
-                    v6: this.ipv6
-                });
-            }
+            callback(ip ? ip : null);
         });
     }
 }

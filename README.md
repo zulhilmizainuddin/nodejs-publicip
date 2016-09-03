@@ -8,8 +8,14 @@ Event emitter for querying your IPv4 and IPv6 public IP address from OpenDNS
 ## API
 
 ```javascript
+// query public IPv4 address
+queryPublicIPv4Address()
+
+// query public IPv6 address
+queryPublicIPv6Address()
+
 // query public IPv4 and IPv6 address
-queryPublicIPAddress()
+queryPublicIPAddresses()
 ```
 
 ## Usage Example
@@ -24,7 +30,7 @@ publicIp
         console.log(`ipv6 address: ${ip.v6}`);
     });
 
-publicIp.queryPublicIPAddress();
+publicIp.queryPublicIPAddresses();
 ```
 
 ## Result Example
