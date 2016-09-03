@@ -1,6 +1,6 @@
 {
   "name": "nodejs-publicip",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Event emitter for querying IPv4 and IPv6 public IP address from OpenDNS",
   "main": "index.js",
   "scripts": {
