@@ -3,6 +3,7 @@
 const dgram = require('dgram');
 const dns = require('dns-socket');
 const events = require('events');
+const async = require('async');
 
 class PublicIp extends events.EventEmitter {
 
@@ -28,8 +29,10 @@ class PublicIp extends events.EventEmitter {
     }
 
     queryPublicIPAddress() {
-        this.queryIPAddress('ipv4');
-        this.queryIPAddress('ipv6');
+        async.parallel([
+            () => this.queryIPAddress('ipv4'),
+            () => this.queryIPAddress('ipv6')
+        ]);
     }
 
     queryIPAddress(version) {

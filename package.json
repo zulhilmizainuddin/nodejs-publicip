@@ -22,6 +22,7 @@
     "url": "https://github.com/zulhilmizainuddin/nodejs-publicip.git"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "dns-socket": "^1.4.1"
   }
 }
