@@ -4,11 +4,9 @@ const PublicIp = require('./index');
 
 const publicIp = new PublicIp();
 publicIp
-    .on('ipv4', (ip) => {
-        console.log(`ipv4 address: ${ip}`);
-    })
-    .on('ipv6', (ip) => {
-        console.log(`ipv6 address: ${ip}`);
+    .on('ip', (ip) => {
+        console.log(`ipv4 address: ${ip.v4}`);
+        console.log(`ipv6 address: ${ip.v6}`);
     });
 
-publicIp.getPublicIPAddress();
+publicIp.queryPublicIPAddress();

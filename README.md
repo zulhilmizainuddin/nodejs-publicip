@@ -1,7 +1,5 @@
 # nodejs-publicip [![Code Climate](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip/badges/gpa.svg)](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip)
-Query your IPv4 and IPv6 public IP address from OpenDNS
-
-Based on implementation of https://github.com/sindresorhus/public-ip.
+Event emitter for querying your IPv4 and IPv6 public IP address from OpenDNS
 
 ## Install
 
@@ -10,12 +8,6 @@ Based on implementation of https://github.com/sindresorhus/public-ip.
 ## API
 
 ```javascript
-// query public IPv4 address
-getPublicIPv4Address()
-
-// query public IPv6 address
-getPublicIPv6Address()
-
 // query public IPv4 and IPv6 address
 getPublicIPAddress()
 ```
@@ -27,14 +19,12 @@ const PublicIp = require('nodejs-publicip');
 
 const publicIp = new PublicIp();
 publicIp
-    .on('ipv4', (ip) => {
-        console.log(`ipv4 address: ${ip}`);
-    })
-    .on('ipv6', (ip) => {
-        console.log(`ipv6 address: ${ip}`);
+    .on('ip', (ip) => {
+        console.log(`ipv4 address: ${ip.v4}`);
+        console.log(`ipv6 address: ${ip.v6}`);
     });
 
-publicIp.getPublicIPAddress();
+publicIp.queryPublicIPAddress();
 ```
 
 ## Result Example

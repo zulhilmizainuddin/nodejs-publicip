@@ -27,16 +27,7 @@ class PublicIp extends events.EventEmitter {
         };
     }
 
-
-    getPublicIPv4Address() {
-        this.queryIPAddress('ipv4');
-    }
-
-    getPublicIPv6Address() {
-        this.queryIPAddress('ipv6');
-    }
-
-    getPublicIPAddress() {
+    queryPublicIPAddress() {
         this.queryIPAddress('ipv4');
         this.queryIPAddress('ipv6');
     }
@@ -44,7 +35,7 @@ class PublicIp extends events.EventEmitter {
     queryIPAddress(version) {
         const data = this.type[version];
         const socket = dns({
-            socket: dgram.createSocket(version === 'ipv6' ? 'udp6' : 'udp4'),
+            socket: dgram.createSocket(version === 'ipv4' ? 'udp4' : 'udp6'),
             retries: 1
         });
 
@@ -61,7 +52,18 @@ class PublicIp extends events.EventEmitter {
                 ip = res.answers[0] && res.answers[0].data;
             }
 
-            this.emit(version, ip ? ip : null);
+            if (version === 'ipv4') {
+                this.ipv4 = ip ? ip : null;
+            } else {
+                this.ipv6 = ip ? ip : null;
+            }
+
+            if (this.ipv4 !== undefined && this.ipv6 !== undefined) {
+                this.emit('ip', {
+                    v4: this.ipv4,
+                    v6: this.ipv6
+                });
+            }
         });
     }
 }
