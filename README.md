@@ -30,7 +30,7 @@ publicIp
         console.log(`ipv6 address: ${ip.v6}`);
     })
     .on('error', (err) => {
-            console.log(`error: ${err}`);
+        console.log(`error: ${err}`);
      });;
 
 publicIp.queryPublicIPAddresses();
