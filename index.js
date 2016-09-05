@@ -29,13 +29,23 @@ class PublicIp extends events.EventEmitter {
     }
 
     queryPublicIPv4Address() {
-        this.queryIPAddress('ipv4', (ip) => {
+        this.queryIPAddress('ipv4', (err, ip) => {
+            if (err) {
+                this.emit('error', err);
+                return;
+            }
+
             this.emit('ip', ip);
         });
     }
 
     queryPublicIPv6Address() {
-        this.queryIPAddress('ipv6', (ip) => {
+        this.queryIPAddress('ipv6', (err, ip) => {
+            if (err) {
+                this.emit('error', err);
+                return;
+            }
+
             this.emit('ip', ip);
         });
     }
@@ -43,20 +53,24 @@ class PublicIp extends events.EventEmitter {
     queryPublicIPAddresses() {
         async.parallel({
            ipv4: (callback) => {
-               this.queryIPAddress('ipv4', (ip) => {
-                   callback(null, ip);
+               this.queryIPAddress('ipv4', (err, ip) => {
+                   callback(err, ip);
                });
            },
             ipv6: (callback) => {
-                this.queryIPAddress('ipv6', (ip) => {
-                    callback(null, ip);
+                this.queryIPAddress('ipv6', (err, ip) => {
+                    callback(err, ip);
                 });
             }
         }, (err, results) => {
-            this.emit('ip', {
-                v4: results.ipv4,
-                v6: results.ipv6
-            });
+            if (results.ipv4 || results.ipv6) {
+                this.emit('ip', {
+                    v4: results.ipv4,
+                    v6: results.ipv6
+                });
+            } else {
+                this.emit('error', err);
+            }
         });
     }
 
@@ -73,14 +87,17 @@ class PublicIp extends events.EventEmitter {
         }, 53, data.server, (err, res) => {
             socket.destroy();
 
-            if (err) {}
-
-            let ip;
-            if (res) {
-                ip = res.answers[0] && res.answers[0].data;
+            if (err) {
+                callback(err.message, null);
+                return;
             }
 
-            callback(ip ? ip : null);
+            let ip = res.answers[0] && res.answers[0].data;
+            if (ip) {
+                callback(null, ip);
+            } else {
+                callback('Failed to retrieve IP address', null);
+            }
         });
     }
 }
