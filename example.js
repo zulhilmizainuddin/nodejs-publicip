@@ -3,13 +3,12 @@
 const PublicIp = require('./index');
 
 const publicIp = new PublicIp();
-publicIp
-    .on('ip', (ip) => {
-        console.log(`ipv4 address: ${ip.v4}`);
-        console.log(`ipv6 address: ${ip.v6}`);
-    })
-    .on('error', (err) => {
+publicIp.queryPublicIPAddresses((err, ipv4, ipv6) => {
+    if (err) {
         console.log(`error: ${err}`);
-    });
+        return;
+    }
 
-publicIp.queryPublicIPAddresses();
+    console.log(`ipv4 address: ${ipv4}`);
+    console.log(`ipv6 address: ${ipv6}`);
+});

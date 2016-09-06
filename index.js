@@ -5,11 +5,9 @@ const dns = require('dns-socket');
 const events = require('events');
 const async = require('async');
 
-class PublicIp extends events.EventEmitter {
+class PublicIp {
 
     constructor() {
-        super();
-
         this.type = {
             ipv4: {
                 server: '208.67.222.222',
@@ -28,48 +26,35 @@ class PublicIp extends events.EventEmitter {
         };
     }
 
-    queryPublicIPv4Address() {
+    queryPublicIPv4Address(callback) {
         this.queryIPAddress('ipv4', (err, ip) => {
-            if (err) {
-                this.emit('error', err);
-                return;
-            }
-
-            this.emit('ip', ip);
+            callback(err, ip);
         });
     }
 
-    queryPublicIPv6Address() {
+    queryPublicIPv6Address(callback) {
         this.queryIPAddress('ipv6', (err, ip) => {
-            if (err) {
-                this.emit('error', err);
-                return;
-            }
-
-            this.emit('ip', ip);
+            callback(err, ip);
         });
     }
 
-    queryPublicIPAddresses() {
+    queryPublicIPAddresses(callback) {
         async.parallel({
-           ipv4: (callback) => {
+           ipv4: (answer) => {
                this.queryIPAddress('ipv4', (err, ip) => {
-                   callback(err, ip);
+                   answer(err, ip);
                });
            },
-            ipv6: (callback) => {
+            ipv6: (answer) => {
                 this.queryIPAddress('ipv6', (err, ip) => {
-                    callback(err, ip);
+                    answer(err, ip);
                 });
             }
         }, (err, results) => {
             if (results.ipv4 || results.ipv6) {
-                this.emit('ip', {
-                    v4: results.ipv4,
-                    v6: results.ipv6
-                });
+                callback(null, results.ipv4, results.ipv6);
             } else {
-                this.emit('error', err);
+                callback(err, null, null);
             }
         });
     }

@@ -1,5 +1,5 @@
 # nodejs-publicip [![Code Climate](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip/badges/gpa.svg)](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip)
-Event emitter for querying your IPv4 and IPv6 public IP address from OpenDNS
+Query your IPv4 and IPv6 public IP address from OpenDNS
 
 ## Install
 
@@ -9,31 +9,61 @@ Event emitter for querying your IPv4 and IPv6 public IP address from OpenDNS
 
 ```javascript
 // query public IPv4 address
-queryPublicIPv4Address()
+queryPublicIPv4Address(callback)
 
 // query public IPv6 address
-queryPublicIPv6Address()
+queryPublicIPv6Address(callback)
 
 // query public IPv4 and IPv6 address
-queryPublicIPAddresses()
+queryPublicIPAddresses(callback)
 ```
 
 ## Usage Example
 
+### queryPublicIPv4Address(callback)
 ```javascript
 const PublicIp = require('nodejs-publicip');
 
 const publicIp = new PublicIp();
-publicIp
-    .on('ip', (ip) => {
-        console.log(`ipv4 address: ${ip.v4}`);
-        console.log(`ipv6 address: ${ip.v6}`);
-    })
-    .on('error', (err) => {
+publicIp.queryPublicIPv4Address((err, ip) => {
+    if (err) {
         console.log(`error: ${err}`);
-     });;
+        return;
+    }
 
-publicIp.queryPublicIPAddresses();
+    console.log(`ip address: ${ip}`);
+});
+```
+
+### queryPublicIPv6Address(callback)
+```javascript
+const PublicIp = require('nodejs-publicip');
+
+const publicIp = new PublicIp();
+publicIp.queryPublicIPv6Address((err, ip) => {
+    if (err) {
+        console.log(`error: ${err}`);
+        return;
+    }
+
+    console.log(`ip address: ${ip}`);
+});
+```
+
+### queryPublicIPAddresses(callback)
+```javascript
+const PublicIp = require('nodejs-publicip');
+
+const publicIp = new PublicIp();
+publicIp.queryPublicIPAddresses((err, ipv4, ipv6) => {
+    if (err) {
+        console.log(`error: ${err}`);
+        return;
+    }
+
+    console.log(`ipv4 address: ${ipv4}`);
+    console.log(`ipv6 address: ${ipv6}`);
+});
 ```
 
 ## Result Example
