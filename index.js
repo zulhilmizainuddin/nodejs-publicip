@@ -27,18 +27,49 @@ class PublicIp {
     }
 
     queryPublicIPv4Address(callback) {
-        this.queryIPAddress('ipv4', (err, ip) => {
-            callback(err, ip);
-        });
+        if (callback instanceof Function) {
+            return this.queryPublicIPv4AddressWithCallback(callback);
+        }
+        else {
+            return this.queryPublicIPv4AddressWithPromise();
+        }
     }
 
     queryPublicIPv6Address(callback) {
-        this.queryIPAddress('ipv6', (err, ip) => {
-            callback(err, ip);
-        });
+        if (callback instanceof Function) {
+            return this.queryPublicIPv6AddressWithCallback(callback);
+        }
+        else {
+            return this.queryPublicIPv6AddressWithPromise();
+        }
     }
 
     queryPublicIPAddresses(callback) {
+        if (callback instanceof Function) {
+            return this.queryPublicIPAddressesWithCallback(callback);
+        }
+        else {
+            return this.queryPublicIPAddressesWithPromise();
+        }
+    }
+
+    queryPublicIPv4AddressWithCallback(callback) {
+        this.queryIPAddress('ipv4', (err, ip) => {
+            callback(err, ip);
+        });
+
+        return null;
+    }
+
+    queryPublicIPv6AddressWithCallback(callback) {
+        this.queryIPAddress('ipv6', (err, ip) => {
+            callback(err, ip);
+        });
+
+        return null;
+    }
+
+    queryPublicIPAddressesWithCallback(callback) {
         async.parallel({
            ipv4: (answer) => {
                this.queryIPAddress('ipv4', (err, ip) => {
@@ -57,6 +88,61 @@ class PublicIp {
                 callback(err, null, null);
             }
         });
+
+        return null;
+    }
+
+    queryPublicIPv4AddressWithPromise() {
+        return new Promise((resolve, reject) => {
+            this.queryIPAddress('ipv4', (err, ip) => {
+                if (!err) {
+                    resolve(ip);
+                }
+                else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    queryPublicIPv6AddressWithPromise() {
+        return new Promise((resolve, reject) => {
+            this.queryIPAddress('ipv6', (err, ip) => {
+                if (!err) {
+                    resolve(ip);
+                }
+                else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    queryPublicIPAddressesWithPromise() {
+        return new Promise((resolve, reject) => {
+            async.parallel({
+                ipv4: (answer) => {
+                    this.queryIPAddress('ipv4', (err, ip) => {
+                        answer(err, ip);
+                    });
+                },
+                ipv6: (answer) => {
+                    this.queryIPAddress('ipv6', (err, ip) => {
+                        answer(err, ip);
+                    });
+                }
+            }, (err, results) => {
+                if (results.ipv4 || results.ipv6) {
+                    resolve({
+                        ipv4: results.ipv4,
+                        ipv6: results.ipv6
+                    });
+                } else {
+                    reject(err);
+                }
+            });
+        });
+        
     }
 
     queryIPAddress(version, callback) {
@@ -73,7 +159,7 @@ class PublicIp {
             socket.destroy();
 
             if (err) {
-                callback(err.message, null);
+                callback(err, null);
                 return;
             }
 
@@ -81,7 +167,7 @@ class PublicIp {
             if (ip) {
                 callback(null, ip);
             } else {
-                callback('Failed to retrieve IP address', null);
+                callback(new Error('Failed to retrieve IP address'), null);
             }
         });
     }
