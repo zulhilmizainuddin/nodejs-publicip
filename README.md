@@ -1,4 +1,7 @@
 # nodejs-publicip [![Code Climate](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip/badges/gpa.svg)](https://codeclimate.com/github/zulhilmizainuddin/nodejs-publicip)
+
+[![NPM](https://nodei.co/npm/nodejs-publicip.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodejs-publicip/)
+
 Query your IPv4 and IPv6 public IP address from OpenDNS
 
 ## Install
