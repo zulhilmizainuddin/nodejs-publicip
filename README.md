@@ -6,6 +6,7 @@ Query your IPv4 and IPv6 public IP address from OpenDNS
     npm install --save nodejs-publicip
     
 ## API
+### Get result by callback
 
 ```javascript
 // query public IPv4 address
@@ -18,52 +19,112 @@ queryPublicIPv6Address(callback)
 queryPublicIPAddresses(callback)
 ```
 
+### Get result by promise
+
+```javascript
+// query public IPv4 address
+queryPublicIPv4Address()
+
+// query public IPv6 address
+queryPublicIPv6Address()
+
+// query public IPv4 and IPv6 address
+queryPublicIPAddresses()
+```
+
 ## Usage Example
 
-### queryPublicIPv4Address(callback)
+### Result by callback
+
+#### queryPublicIPv4Address(callback)
 ```javascript
 const PublicIp = require('nodejs-publicip');
 
-const publicIp = new PublicIp();
-publicIp.queryPublicIPv4Address((err, ip) => {
-    if (err) {
-        console.log(`error: ${err}`);
-        return;
-    }
+new PublicIp()
+    .queryPublicIPv4Address((err, ip) => {
+        if (err) {
+            console.log(`error: ${err}`);
+            return;
+        }
 
-    console.log(`ip address: ${ip}`);
+        console.log(`ip address: ${ip}`);
 });
 ```
 
-### queryPublicIPv6Address(callback)
+#### queryPublicIPv6Address(callback)
 ```javascript
 const PublicIp = require('nodejs-publicip');
 
-const publicIp = new PublicIp();
-publicIp.queryPublicIPv6Address((err, ip) => {
-    if (err) {
-        console.log(`error: ${err}`);
-        return;
-    }
+new PublicIp()
+    .queryPublicIPv6Address((err, ip) => {
+        if (err) {
+            console.log(`error: ${err}`);
+            return;
+        }
 
-    console.log(`ip address: ${ip}`);
+        console.log(`ip address: ${ip}`);
 });
 ```
 
-### queryPublicIPAddresses(callback)
+#### queryPublicIPAddresses(callback)
 ```javascript
 const PublicIp = require('nodejs-publicip');
 
-const publicIp = new PublicIp();
-publicIp.queryPublicIPAddresses((err, ipv4, ipv6) => {
-    if (err) {
-        console.log(`error: ${err}`);
-        return;
-    }
+new PublicIp()
+    .queryPublicIPAddresses((err, ipv4, ipv6) => {
+        if (err) {
+            console.log(`error: ${err}`);
+            return;
+        }
 
-    console.log(`ipv4 address: ${ipv4}`);
-    console.log(`ipv6 address: ${ipv6}`);
+        console.log(`ipv4 address: ${ipv4}`);
+        console.log(`ipv6 address: ${ipv6}`);
 });
+```
+
+### Result by promise
+
+#### queryPublicIPv4Address()
+```javascript
+const PublicIp = require('nodejs-publicip');
+
+new PublicIp()
+    .queryPublicIPv4Address()
+    .then((ipv4) => {
+        console.log(`ipv4 address: ${ipv4}`);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+```
+
+#### queryPublicIPv6Address()
+```javascript
+const PublicIp = require('nodejs-publicip');
+
+new PublicIp()
+    .queryPublicIPv6Address()
+    .then((ipv6) => {
+        console.log(`ipv6 address: ${ipv6}`);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+```
+
+#### queryPublicIPv6Address()
+```javascript
+const PublicIp = require('nodejs-publicip');
+
+new PublicIp()
+    .queryPublicIPAddresses()
+    .then((result) => {
+        console.log(`ipv4 address: ${result.ipv4}`);
+        console.log(`ipv6 address: ${result.ipv6}`);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 ```
 
 ## Result Example
