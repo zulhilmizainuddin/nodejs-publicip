@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "async": "^2.0.1",
-    "dns-socket": "^1.4.1"
+    "dns-socket": "1.4.2"
   }
 }
